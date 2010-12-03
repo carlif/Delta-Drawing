@@ -1,0 +1,36 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeltaDrawing", "DeltaDrawing\DeltaDrawing.csproj", "{2A9C11DD-BC12-49B2-A810-A1563350F214}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Model", "Model\Model.csproj", "{8725FB0D-D62B-492C-9944-ED8792379312}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TileHelper", "TileHelper\TileHelper.csproj", "{83E644FB-8845-4874-B804-F7A6BBDCC052}"
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Setup", "Setup\Setup.vdproj", "{888C0E99-91DE-4B03-AE01-F9D208090850}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2A9C11DD-BC12-49B2-A810-A1563350F214}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2A9C11DD-BC12-49B2-A810-A1563350F214}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2A9C11DD-BC12-49B2-A810-A1563350F214}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2A9C11DD-BC12-49B2-A810-A1563350F214}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8725FB0D-D62B-492C-9944-ED8792379312}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8725FB0D-D62B-492C-9944-ED8792379312}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8725FB0D-D62B-492C-9944-ED8792379312}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8725FB0D-D62B-492C-9944-ED8792379312}.Release|Any CPU.Build.0 = Release|Any CPU
+		{83E644FB-8845-4874-B804-F7A6BBDCC052}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{83E644FB-8845-4874-B804-F7A6BBDCC052}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{83E644FB-8845-4874-B804-F7A6BBDCC052}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{83E644FB-8845-4874-B804-F7A6BBDCC052}.Release|Any CPU.Build.0 = Release|Any CPU
+		{888C0E99-91DE-4B03-AE01-F9D208090850}.Debug|Any CPU.ActiveCfg = Debug
+		{888C0E99-91DE-4B03-AE01-F9D208090850}.Release|Any CPU.ActiveCfg = Release
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

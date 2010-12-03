@@ -1,0 +1,97 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="DeltaDrawing.Model.Serializer">
+    <Position X="0.75" Y="6" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AgAAAAIAAEAAACAAAAAAAAACAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Serilizer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaDrawing.Model.DeltaColor">
+    <Position X="6.75" Y="0.75" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAgAAAgAEEAAAAAACAAAAABAACBAAgBgAAgA=</HashCode>
+      <FileName>DeltaColor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaDrawing.Model.DeltaContainer">
+    <Position X="0.75" Y="0.75" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>EAABFAAIAAAAACAFEEIAAAQAAgAAAAAABAAAABAAIAA=</HashCode>
+      <FileName>DeltaContainer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaDrawing.Model.DeltaPath">
+    <Position X="2.75" Y="0.75" Width="1.75" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>EAAAAIAAAIABgABEFAAABAQgAIBIIADACBAAQREAgAI=</HashCode>
+      <FileName>DeltaPath.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaDrawing.Model.DeltaPoint">
+    <Position X="4.75" Y="0.75" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>QEAAAAAABAAAAIAAAAAAAAAAQIAAAAAABBAAAAAA4AA=</HashCode>
+      <FileName>DeltaPoint.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaDrawing.Model.DeltaValue">
+    <Position X="8.75" Y="0.75" Width="2" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>QAAABABAABgAIAAAEAAAAAAAgAQAAAAAABAgAAAAAAA=</HashCode>
+      <FileName>DeltaValue.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DeltaDrawing.Model.DeltaChannel">
+    <Position X="8.75" Y="4.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DeltaChannel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaDrawing.Model.Transform">
+    <Position X="11.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAABAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAYAA=</HashCode>
+      <FileName>Transform.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaDrawing.Model.CropTransform">
+    <Position X="13.25" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAABAAAAAABAAAAAEAAAAAAAACAAAAAAAAAAAA=</HashCode>
+      <FileName>CropTransform.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaDrawing.Model.RotateTransform">
+    <Position X="11.25" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAEAAAAAAAAA=</HashCode>
+      <FileName>RotateTransform.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaDrawing.Model.TransformContainer">
+    <Position X="11.25" Y="0.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAwAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAIAAAAA=</HashCode>
+      <FileName>TransformContainer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

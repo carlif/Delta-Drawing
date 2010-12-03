@@ -1,0 +1,36 @@
+﻿<Window x:Class="DeltaDrawing.UI.PathWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:cust="clr-namespace:DeltaDrawing.UI"
+    xmlns:etb="clr-namespace:DeltaDrawing.UI.EditableTextBlock"
+    Title="DeltaDrawing" Height="700" Width="1192">
+    <Grid>
+        <Menu Height="22" HorizontalAlignment="Stretch" Margin="0,0,0,0" Name="menuTop" VerticalAlignment="Top" ScrollViewer.CanContentScroll="False" Visibility="Visible">
+            <!--<MenuItem Height="22" Header="_File">-->
+            <MenuItem Header="_Load" Name="menuLoad" Click="menuLoad_Click" />
+            <MenuItem Header="_Draw" Name="menuRedraw" Click="menuDraw_Click" />
+            <MenuItem Header="_Save" Name="menuSave" Click="SaveMenuItem_Click" />
+            <!--</MenuItem>-->
+            <!--<MenuItem Height="22" Header="_Settings">
+            <MenuItem Header="_Xml Visibility" Name="menuXmlVisibility" Click="menuXmlVisibility_Click" />-->
+            <!--</MenuItem>-->
+        </Menu>
+        <ScrollViewer HorizontalScrollBarVisibility="Auto" Margin="0,22,0,0">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1170*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <TextBlock Name="textGeneral" Margin="0,0,0,0" HorizontalAlignment="Right" VerticalAlignment="Bottom" InputMethod.IsInputMethodEnabled="True" IsEnabled="True">DeltaDrawing</TextBlock>
+                <Viewbox Grid.Column="1" Margin="0,0,0,0">
+                    <Image x:Name="image" />
+                </Viewbox>
+                <TextBox Name="textboxXml" VerticalAlignment="Top" Grid.Column="1" Height="700" Margin="0,0,0,0" Padding="10" TextWrapping="Wrap" Opacity=".5" Visibility="Collapsed">xml</TextBox>
+                <etb:EditableTextBlock Text="" VerticalAlignment="Top" MouseDoubleClick="EditableTextBlock_MouseDoubleClick" x:Name="eTextBlock" />
+                <cust:DeltaColorControl x:Name="deltaColorControl" Visibility="Hidden"></cust:DeltaColorControl>
+            </Grid>
+        </ScrollViewer>
+    </Grid>
+</Window>

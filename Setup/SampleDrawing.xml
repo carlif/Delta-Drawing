@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DeltaContainer xmlns:xsd="http://jaycerenner.com/schema/deltadrawing/2009/05/05" name="Sample Drawing" scale="1" displayScale="1" blurRadius="0.1">
+    <Comments>
+      <![CDATA[ 
+            A DeltaPath is a line, defined by a set of points. Point0 and Point3 are the start and end of the line.
+            Point1 controls the amount of curvature coming from Point0.
+            Point2 controls the amount of curvature coming from Point3. 
+            
+            The DeltaPaths will be drawn the number of times defined by the startIteration and endIteration. 
+            Each time the path is drawn, the points in the line change by the amounts in deltaX and deltaY.
+            X is the horizontal axis, Y is the vertical axis.
+            Also, the deltaX and deltaY values also change by the amounts in deltaXdelta and deltaYdelta.
+            
+            The color of the line is defined in the DeltaColor. Note that this element also has delta values.
+            
+            Each time the DeltaPath is drawn, the program keeps track of where the line is and updates it for the next iteration.
+            
+            In this way, the line appears to move across the drawing.
+       ]]></Comments>
+    <DeltaPaths>
+        <DeltaPath name="wider-blue" startIteration="1" endIteration="20" offsetX="2" offsetY="10" skipIterationsCSV="">
+            <Point0 x="0" y="0" deltaX="50" deltaY="5" deltaXdelta="-2" deltaYdelta="-0.5" />
+            <Point1 x="500" y="100" deltaX="10" deltaY="-2.5" deltaXdelta="-1.2" deltaYdelta="0.5" />
+            <Point2 x="100" y="600" deltaX="-1" deltaY="2" deltaXdelta="-0.1" deltaYdelta="0.5" />
+            <Point3 x="0" y="600" deltaX="55" deltaY="-2" deltaXdelta="-1.2" deltaYdelta="0.2" />
+            <DeltaColor>
+                <Alpha value="150" delta="2" />
+                <Red value="50" delta="-0.5" />
+                <Green value="70" delta="-2" />
+                <Blue value="100" delta="0.5" />
+            </DeltaColor>
+            <Thickness value="12" delta="-0.5" />
+        </DeltaPath>
+        <DeltaPath name="background" startIteration="0" endIteration="0" offsetX="0" offsetY="0">
+            <Point0 x="0" y="320" deltaX="0" deltaY="0" />
+            <Point1 x="0" y="320" deltaX="0" deltaY="0" />
+            <Point2 x="900" y="320" deltaX="0" deltaY="0" />
+            <Point3 x="900" y="320" deltaX="0" deltaY="0" />
+            <DeltaColor>
+                <Alpha value="255" delta="0" />
+                <Red value="246" delta="0" />
+                <Green value="249" delta="0" />
+                <Blue value="249" delta="0" />
+            </DeltaColor>
+            <Thickness value="820" delta="0" />
+        </DeltaPath>
+    </DeltaPaths>
+    <Transforms>
+        <CropBeforeRendering x="0" y="0" apply="true" width="820" height="640" />
+    </Transforms>
+</DeltaContainer>
