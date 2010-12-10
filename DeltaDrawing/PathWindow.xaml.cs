@@ -1,15 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using DeltaDrawing.Model;
 using System.IO;
 using System.ComponentModel;
@@ -345,12 +339,13 @@ namespace DeltaDrawing.UI
                 willCrop = (cropBeforeRotating.Height > 0 && cropBeforeRotating.Width > 0 && cropBeforeRotating.Apply);
             }
 
-            String dir = System.Configuration.ConfigurationSettings.AppSettings["TileDirectory"];
+            String tileDirectory = System.Configuration.ConfigurationSettings.AppSettings["TileDirectory"];
+            String outputDirectory = System.Configuration.ConfigurationSettings.AppSettings["OutputDirectory"];
             String fileName = String.Empty;
             String ticks = DateTime.Now.Ticks.ToString();
-            if (!Directory.Exists(dir))
+            if (!Directory.Exists(tileDirectory))
             {
-                Directory.CreateDirectory(dir);
+                Directory.CreateDirectory(tileDirectory);
             }
 
             const String EXTENSION = "png";
@@ -394,11 +389,6 @@ namespace DeltaDrawing.UI
                     height = (int)(drawingVisual.ContentBounds.Height * scale);
                 }
             }
-            //else //We're already doing this
-            //{
-            //    height = (int)(drawingVisual.ContentBounds.Height * scale);
-            //    width = (int)(drawingVisual.ContentBounds.Width * scale);
-            //}
 
             // test the remaining width and height
             // if >= the default amount, then leave at default
@@ -417,7 +407,7 @@ namespace DeltaDrawing.UI
                     drawingVisual.Offset = new Vector(offsetW * -1, offsetH * -1);
                     _rtb = new RenderTargetBitmap(sizeW, sizeH, 96, 96, PixelFormats.Pbgra32);
                     _rtb.Render(drawingVisual);
-                    fileName = String.Format("{0}\\{1}.{2}.{3}.{4}", dir, posH.ToString(), posW.ToString(), ticks, EXTENSION);
+                    fileName = String.Format("{0}\\{1}.{2}.{3}.{4}", tileDirectory, posH.ToString(), posW.ToString(), ticks, EXTENSION);
                     offsetW += DEFAULT_W;
                     posW++;
                     saveImage(fileName);
@@ -444,51 +434,16 @@ namespace DeltaDrawing.UI
                 width = (int)(cropBeforeRotating.Width * scale);
             }
 
-            return assembleTiles(dir, DEFAULT_H, DEFAULT_W, ticks, EXTENSION, out width, out height, name, width, height, scale, cropAfterRotating, rotate);
+            return assembleTiles(tileDirectory, DEFAULT_H, DEFAULT_W, ticks, EXTENSION, out width, out height, name, width, height, scale, cropAfterRotating, rotate, outputDirectory);
         }
 
-        private ImageSource assembleTiles(String directory, int tileW, int tileH, string instanceMarker, string extension, out int width, out int height, string name, int imageWidth, int imageHeight, double scale, CropTransform cropAfterRotating, Model.RotateTransform rotate)
+        private ImageSource assembleTiles(String tileDirectory, int tileW, int tileH, string instanceMarker, string extension, out int width, out int height, string name, int imageWidth, int imageHeight, double scale, CropTransform cropAfterRotating, Model.RotateTransform rotate, String outputDirectory)
         {
             // Now that we have our tiles on the hard drive, piece them back together to display to the user
-            //const int WIDTH_POSITION = 1;
-            //const int HEIGHT_POSITION = 0;
-            //_rtb = null;
-            //runGC();
-
-            //int posW = 0;
-            //int posH = 0;
-            //DirectoryInfo di = new DirectoryInfo(directory);
-            //DrawingVisual dv = new DrawingVisual();
-            //using (DrawingContext ctx = dv.RenderOpen())
-            //{
-            //    foreach (FileInfo fi in di.GetFiles())
-            //    {
-            //        string[] positions = fi.Name.Split('.');
-            //        if (positions.Length > WIDTH_POSITION)
-            //        {
-            //            if (int.TryParse(positions[WIDTH_POSITION], out posW) &&
-            //                int.TryParse(positions[HEIGHT_POSITION], out posH) &&
-            //                fi.Name.Contains(instanceMarker) &&
-            //                fi.Name.EndsWith(extension))
-            //            {
-            //                PngBitmapDecoder d = new PngBitmapDecoder(new Uri(fi.FullName), BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.Default);
-            //                ctx.DrawImage(d.Frames[0], new Rect(posW * tileW, posH * tileH, (int)d.Frames[0].Width, (int)d.Frames[0].Height));
-            //            }
-            //        }
-            //    }
-            //}
-            //width = Convert.ToInt32(dv.ContentBounds.Width);
-            //height = Convert.ToInt32(dv.ContentBounds.Height);
-            ////RenderTargetBitmap r = new RenderTargetBitmap(width, height, 96, 96, PixelFormats.Pbgra32);
-            ////r.Render(dv);
-            ////return (ImageSource)r;
-            //_rtb = new RenderTargetBitmap(width, height, 96, 96, PixelFormats.Pbgra32);
-            //_rtb.Render(dv);
-
 
             // WPF assemblage is too memory-intensive (as far as I can tell). Shell out to GDI+
             TileHelper.Concatenater helper = new TileHelper.Concatenater();
-            string fileName = helper.ConcatenateTiles(imageHeight, imageWidth, tileH, tileW, directory, instanceMarker, extension, name, scale, cropAfterRotating, rotate);
+            string fileName = helper.ConcatenateTiles(imageHeight, imageWidth, tileH, tileW, tileDirectory, instanceMarker, extension, name, scale, cropAfterRotating, rotate, outputDirectory);
             // Now that the files are concatenated, save off the matching xml
             string xmlFileName = String.Format("{0}.{1}.{2}.xml", _container.Name, instanceMarker, extension);
             saveXmlFile(xmlFileName);
@@ -508,6 +463,12 @@ namespace DeltaDrawing.UI
             dv.Transform = scaleTrans;
             _rtb = new RenderTargetBitmap(width, height, 96, 96, PixelFormats.Pbgra32);
             _rtb.Render(dv);
+
+            // Now that we're done with the tiles, clean up
+            if (System.Configuration.ConfigurationSettings.AppSettings["deleteTiles"].ToLower() == "true")
+            {
+                helper.deleteTiles(tileDirectory, instanceMarker, extension);
+            }
 
             return (ImageSource)_rtb;
         }
@@ -537,6 +498,11 @@ namespace DeltaDrawing.UI
                 dlg.FileName = "Document"; // Default file name
                 dlg.DefaultExt = ".xml"; // Default file extension
                 dlg.Filter = "Xml files (.xml)|*.xml"; // Filter files by extension
+                if (!Directory.Exists(System.Configuration.ConfigurationSettings.AppSettings["OutputDirectory"]))
+                {
+                    Directory.CreateDirectory(System.Configuration.ConfigurationSettings.AppSettings["OutputDirectory"]);
+                }
+                dlg.InitialDirectory = System.Configuration.ConfigurationSettings.AppSettings["OutputDirectory"];
 
                 // Show open file dialog box
                 Nullable<bool> result = dlg.ShowDialog();

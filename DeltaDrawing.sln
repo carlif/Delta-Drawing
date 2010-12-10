@@ -7,7 +7,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Model", "Model\Model.csproj
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TileHelper", "TileHelper\TileHelper.csproj", "{83E644FB-8845-4874-B804-F7A6BBDCC052}"
 EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Setup", "Setup\Setup.vdproj", "{888C0E99-91DE-4B03-AE01-F9D208090850}"
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "InstallDeltaDrawing", "Setup\Setup.vdproj", "{888C0E99-91DE-4B03-AE01-F9D208090850}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InstallAction", "InstallAction\InstallAction.csproj", "{3BD85349-C0AF-46D8-8630-3F361BBBE2A7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,6 +31,10 @@ Global
 		{83E644FB-8845-4874-B804-F7A6BBDCC052}.Release|Any CPU.Build.0 = Release|Any CPU
 		{888C0E99-91DE-4B03-AE01-F9D208090850}.Debug|Any CPU.ActiveCfg = Debug
 		{888C0E99-91DE-4B03-AE01-F9D208090850}.Release|Any CPU.ActiveCfg = Release
+		{3BD85349-C0AF-46D8-8630-3F361BBBE2A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3BD85349-C0AF-46D8-8630-3F361BBBE2A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3BD85349-C0AF-46D8-8630-3F361BBBE2A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3BD85349-C0AF-46D8-8630-3F361BBBE2A7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

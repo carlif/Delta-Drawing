@@ -11,7 +11,7 @@ namespace DeltaDrawing.TileHelper
     public class Concatenater
     {
 
-        public string ConcatenateTiles(int height, int width, int tileHeight, int tileWidth, string tileDirectoryFullPath, string key, string extension, string name, double scale, CropTransform cropAfterRotating, RotateTransform rotate)
+        public string ConcatenateTiles(int height, int width, int tileHeight, int tileWidth, string tileDirectoryFullPath, string key, string extension, string name, double scale, CropTransform cropAfterRotating, RotateTransform rotate, string outputDirectory)
         {
             if (String.IsNullOrEmpty(tileDirectoryFullPath) || String.IsNullOrEmpty(key))
             {
@@ -41,11 +41,14 @@ namespace DeltaDrawing.TileHelper
                         {
                             Image i = Image.FromFile(fi.FullName);
                             g.DrawImage(i, new Rectangle(posW * tileWidth, posH * tileHeight, i.Width, i.Height));
+                            i = null;
                         }
                     }
                 }
 
-                string fileName = String.Format("{0}\\{1}.{2}.nonrotated.{3}", tileDirectoryFullPath, name, key, extension);
+                
+
+                string fileName = String.Format("{0}\\{1}.{2}.nonrotated.{3}", outputDirectory, name, key, extension);
                 b.Save(fileName);
                 g.Dispose();
                 runGC();
@@ -57,9 +60,6 @@ namespace DeltaDrawing.TileHelper
                     {
                         // Rotation code
 
-                        //g.RotateTransform(i)
-                        //g.TranslateTransform(IMG_SIZE \ 2, IMG_SIZE \ 2, Drawing2D.MatrixOrder.Append)
-                        //g.DrawImage(bmp, IMG_SIZE \ 2, IMG_SIZE \ 2, -IMG_SIZE, -IMG_SIZE)
                         Bitmap b1 = new Bitmap(width, height);
                         Graphics g1 = Graphics.FromImage(b1);
 
@@ -71,13 +71,11 @@ namespace DeltaDrawing.TileHelper
 
                         g1.RotateTransform(rotateAngle);
                         g1.TranslateTransform(width / 2, height / 2, System.Drawing.Drawing2D.MatrixOrder.Append);
-                        //g1.DrawImage(rotatedImage, -500, 100, rotatedImage.Width, rotatedImage.Height);
                         // TODO: implement cropping here
                         float floatScale = (float)scale;
-                        //g1.DrawImage(rotatedImage, rotatePosX * floatScale, rotatePosY * floatScale, rotatedImage.Width, rotatedImage.Height);
                         g1.DrawImage(rotatedImage, width / 2, height / 2, -width, -height);
 
-                        fileName = String.Format("{0}\\{1}.{2}.rotated.{3}", tileDirectoryFullPath, name, key, extension);
+                        fileName = String.Format("{0}\\{1}.{2}.rotated.{3}", outputDirectory, name, key, extension);
 
                         b1.Save(fileName);
                         g1.Dispose();
@@ -88,33 +86,6 @@ namespace DeltaDrawing.TileHelper
 
                             if (cropAfterRotating.Width > 0 && cropAfterRotating.Height > 0 && cropAfterRotating.Apply)
                             {
-                                //float cropX = ((float)rotatePosX * floatScale) + ((float)cropAtX * floatScale);
-                                //float cropY = ((float)rotatePosY * floatScale) + ((float)cropAtY * floatScale);
-                                /*
-                                float cropWidthVector = (float)cropWidth * floatScale;
-                                float cropHeightVector = (float)cropHeight * floatScale;
-                                float cropX = (float)cropAtX * floatScale;
-                                float cropY = (float)cropAtY * floatScale;
-                                Bitmap b2 = new Bitmap(width, height);
-                                Graphics g2 = Graphics.FromImage(b2);
-                                Image croppedImage = Image.FromFile(fileName);
-                                g2.DrawImage(croppedImage, -cropX, -cropY, croppedImage.Width + cropX, croppedImage.Height + cropY);
-                                */
-                                /*
-                                float cropWidthVector = (float)cropWidth * floatScale;
-                                float cropHeightVector = (float)cropHeight * floatScale;
-                                float cropX = (float)cropAtX * floatScale;
-                                float cropY = (float)cropAtY * floatScale;
-                                Bitmap b2 = new Bitmap((int)cropWidthVector, (int)cropHeightVector);
-                                Graphics g2 = Graphics.FromImage(b2);
-                                Image croppedImage = Image.FromFile(fileName);
-                                g2.DrawImage(croppedImage, -cropX, -cropY, cropWidthVector + cropX, cropHeightVector + cropY);
-
-                                //Rectangle rect = new Rectangle(0,0,(int)cropWidthVector,(int)cropHeightVector);
-                                //g2.DrawImage(croppedImage, rect, cropX, cropY, cropWidthVector, cropHeightVector);
-                                fileName = String.Format("{0}\\{1}.{2}.cropped.{3}", tileDirectoryFullPath, name, key, extension);
-                                b2.Save(fileName);
-                                 * */
                                 float cropWidthVector = (float)cropAfterRotating.Width * floatScale;
                                 float cropHeightVector = (float)cropAfterRotating.Height * floatScale;
                                 Bitmap b2 = (Bitmap)Image.FromFile(fileName); 
@@ -129,7 +100,7 @@ namespace DeltaDrawing.TileHelper
                                 g2.Dispose();
                                 runGC();
 
-                                fileName = String.Format("{0}\\{1}.{2}.cropped.{3}", tileDirectoryFullPath, name, key, extension);
+                                fileName = String.Format("{0}\\{1}.{2}.cropped.{3}", outputDirectory, name, key, extension);
                                 cropped.Save(fileName);
                             }
                         }
@@ -140,6 +111,19 @@ namespace DeltaDrawing.TileHelper
             }
         }
 
+        public void deleteTiles(string tileDirectoryFullPath, string key, string extension)
+        {
+            DirectoryInfo di = new DirectoryInfo(tileDirectoryFullPath);
+
+            foreach (FileInfo fi in di.GetFiles())
+            {
+                if (fi.Name.Contains(key) && fi.Name.EndsWith(extension))
+                {
+                    File.Delete(fi.FullName);
+                }
+            }
+        }
+
         private void runGC()
         {
             GC.Collect();
@@ -147,35 +131,5 @@ namespace DeltaDrawing.TileHelper
             GC.Collect();
         }
 
-        /*
-        private void old()
-        {
-            const int WIDTH_POSITION = 1;
-            const int HEIGHT_POSITION = 0;
-            _rtb = null;
-            runGC();
-
-            int posW = 0;
-            int posH = 0;
-            DirectoryInfo di = new DirectoryInfo(directory);
-            DrawingVisual dv = new DrawingVisual();
-            using (DrawingContext ctx = dv.RenderOpen())
-            {
-                foreach (FileInfo fi in di.GetFiles())
-                {
-                    string[] positions = fi.Name.Split('.');
-                    if (positions.Length > WIDTH_POSITION)
-                    {
-                        if (int.TryParse(positions[WIDTH_POSITION], out posW) &&
-                            int.TryParse(positions[HEIGHT_POSITION], out posH) &&
-                            fi.Name.Contains(instanceMarker) &&
-                            fi.Name.EndsWith(extension))
-                        {
-                            PngBitmapDecoder d = new PngBitmapDecoder(new Uri(fi.FullName), BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.Default);
-                            ctx.DrawImage(d.Frames[0], new Rect(posW * tileW, posH * tileH, (int)d.Frames[0].Width, (int)d.Frames[0].Height));
-                        }
-                    }
-                }
-            }*/
     }
 }
