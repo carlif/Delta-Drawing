@@ -50,6 +50,8 @@
   <ItemGroup>
     <Compile Include="CropTransform.cs" />
     <Compile Include="DeltaChannel.cs" />
+    <Compile Include="DeltaFigure.cs" />
+    <Compile Include="DeltaSegment.cs" />
     <Compile Include="RotateTransform.cs" />
     <Compile Include="Serilizer.cs" />
     <Compile Include="DeltaValue.cs" />

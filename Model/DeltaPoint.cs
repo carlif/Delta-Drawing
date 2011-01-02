@@ -18,6 +18,14 @@ namespace DeltaDrawing.Model
             this.DeltaYDelta = deltaYdelta;
         }
 
+        private string m_Name;
+        [XmlAttribute("name")]
+        public string Name
+        {
+            get { return m_Name; }
+            set { m_Name = value; }
+        }
+
         private double m_X;
         [XmlAttribute("x")]
         public double X

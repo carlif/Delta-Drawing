@@ -1,22 +1,38 @@
 ﻿using System;
-using System.Xml.Serialization;
 using System.Collections.Generic;
+using System.Xml;
+using System.Xml.Serialization;
 
 namespace DeltaDrawing.Model
 {
     /// <summary>
-    /// DeltaPath is obsolete and should only be used for legacy purposes. Use DeltaFigure instead.
+    /// DeltaFigure has a collection of DeltaSegments. It is a line that changes position and shape.
     /// </summary>
     [Serializable]
-    public class DeltaPath
+    public class DeltaFigure
     {
-        public DeltaPath()
+        public DeltaFigure()
         {
+            m_DeltaSegments = new List<DeltaSegment>();
             m_SkipIterationsList = new List<int>();
             this.SetSkipIterationList();
         }
+
+        private List<DeltaSegment> m_DeltaSegments;
+        public List<DeltaSegment> DeltaSegments
+        {
+            get { return m_DeltaSegments; }
+            set { m_DeltaSegments = value; }
+        }
+
+        private DeltaPoint m_StartPoint;
+        public DeltaPoint StartPoint
+        {
+            get { return m_StartPoint; }
+            set { m_StartPoint = value; }
+        }
         
-        public DeltaPath(double thickness, float thicknessDelta, int startIteration, int endIteration, string skipIterationsCSV)
+        public DeltaFigure(double thickness, float thicknessDelta, int startIteration, int endIteration, string skipIterationsCSV)
         {
             m_SkipIterationsList = new List<int>();
             m_Thickness = new DeltaValue(thickness, thicknessDelta, 0, double.MaxValue);
@@ -34,38 +50,6 @@ namespace DeltaDrawing.Model
         {
             get { return m_Name; }
             set { m_Name = value; }
-        }
-
-        private DeltaPoint m_Point0;
-
-        public DeltaPoint Point0
-        {
-            get { return m_Point0; }
-            set { m_Point0 = value; }
-        }
-
-        private DeltaPoint m_Point1;
-
-        public DeltaPoint Point1
-        {
-            get { return m_Point1; }
-            set { m_Point1 = value; }
-        }
-
-        private DeltaPoint m_Point2;
-
-        public DeltaPoint Point2
-        {
-            get { return m_Point2; }
-            set { m_Point2 = value; }
-        }
-
-        private DeltaPoint m_Point3;
-
-        public DeltaPoint Point3
-        {
-            get { return m_Point3; }
-            set { m_Point3 = value; }
         }
 
         private DeltaColor m_DeltaColor;
@@ -150,22 +134,18 @@ namespace DeltaDrawing.Model
 
         public void ApplyDelta()
         {
-            m_Point0.ApplyDelta();
-            m_Point1.ApplyDelta();
-            m_Point2.ApplyDelta();
-            m_Point3.ApplyDelta();
-            m_DeltaColor.ApplyDelta();
             m_Thickness.ApplyDelta();
+            m_DeltaColor.ApplyDelta();
+            m_StartPoint.ApplyDelta();
+            m_DeltaSegments.ForEach(deltaSegment => deltaSegment.ApplyDelta());
         }
 
         public void ApplyOffset()
         {
             if (!m_OffsetApplied)
             {
-                m_Point0.ApplyOffset(m_OffsetX, m_OffsetY);
-                m_Point1.ApplyOffset(m_OffsetX, m_OffsetY);
-                m_Point2.ApplyOffset(m_OffsetX, m_OffsetY);
-                m_Point3.ApplyOffset(m_OffsetX, m_OffsetY);
+                m_StartPoint.ApplyOffset(m_OffsetX, m_OffsetY);
+                m_DeltaSegments.ForEach(deltaSegment => deltaSegment.ApplyOffset(m_OffsetX, m_OffsetY));
             }
             m_OffsetApplied = true;
         }
@@ -175,9 +155,9 @@ namespace DeltaDrawing.Model
             return Serializer.SerializeObject(this);
         }
 
-        public DeltaPath FromString(string xml)
+        public DeltaFigure FromString(string xml)
         {
-            return Serializer.DeserializeObject<DeltaPath>(xml);
+            return Serializer.DeserializeObject<DeltaFigure>(xml);
         }
     }
 }

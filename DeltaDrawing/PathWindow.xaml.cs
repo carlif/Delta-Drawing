@@ -108,17 +108,33 @@ namespace DeltaDrawing.UI
              */
             populateXmlText();
 
-            // Find the max iteration, apply offsets
-            foreach (DeltaPath dPath in _container.DeltaPaths)
+            if (_container.DeltaPaths.Count > 0)
             {
-                dPath.ApplyOffset();
+                // Find the max iteration, apply offsets
+                foreach (DeltaPath dPath in _container.DeltaPaths)
+                {
+                    dPath.ApplyOffset();
 
-                if (dPath.EndIteration > iterations)
-                    iterations = dPath.EndIteration;
+                    if (dPath.EndIteration > iterations)
+                        iterations = dPath.EndIteration;
+                }
+            }
+            
+            if (_container.DeltaFigures.Count > 0)
+            {
+                foreach (DeltaFigure deltaFigure in _container.DeltaFigures)
+                {
+                    deltaFigure.ApplyOffset();
+
+                    if (deltaFigure.EndIteration > iterations)
+                        iterations = deltaFigure.EndIteration;
+                }
             }
 
             DrawingVisual drawingVisual = new DrawingVisual();
             SolidColorBrush brush;
+            //LinearGradientBrush gradientBrush;
+            //RadialGradientBrush radialBrush;
             Pen pen;
 
             using (DrawingContext ctx = drawingVisual.RenderOpen())
@@ -134,6 +150,7 @@ namespace DeltaDrawing.UI
                 // We draw the paths in this loop and apply the deltas
                 for (int i = 0; i < iterations; i++)
                 {
+                    // For legacy containers, draw delta paths
                     foreach (DeltaPath dPath in _container.DeltaPaths)
                     {
                         if (i >= dPath.StartIteration && i <= dPath.EndIteration)
@@ -149,11 +166,45 @@ namespace DeltaDrawing.UI
                                 PathGeometry pathGeometry = buildPath();
                                 setGeometryPoints(pathGeometry, dPath);
                                 brush = new SolidColorBrush(dPath.DeltaColor.Color);
+
                                 pen = new Pen(brush, dPath.Thickness.Value);
 
                                 ctx.DrawGeometry(null, pen, pathGeometry);
 
                                 dPath.ApplyDelta();
+
+                                pathGeometry.Freeze();
+
+                                runGC();
+                            }
+                        }
+                    }
+
+                    // For newer containers, draw delta figures
+                    foreach (DeltaFigure deltaFigure in _container.DeltaFigures)
+                    {
+                        if (i >= deltaFigure.StartIteration && i <= deltaFigure.EndIteration)
+                        {
+                            if (deltaFigure.SkipIterationsList.Contains<int>(i))
+                            {
+                                // If we are to skip this iteration, just apply deltas and do not draw
+                                deltaFigure.ApplyDelta();
+                            }
+                            else
+                            {
+                                // Otherwise proceed to draw the path
+                                PathGeometry pathGeometry = buildFigure(deltaFigure);
+                                brush = new SolidColorBrush(deltaFigure.DeltaColor.Color);
+                                //gradientBrush = new LinearGradientBrush(Color.FromArgb((byte)255, (byte)255, (byte)255, (byte)255), dPath.DeltaColor.Color, 130);
+                                //radialBrush = new RadialGradientBrush(Color.FromArgb((byte)255, (byte)255, (byte)255, (byte)255), dPath.DeltaColor.Color);
+
+                                pen = new Pen(brush, deltaFigure.Thickness.Value);
+                                //pen = new Pen(gradientBrush, dPath.Thickness.Value);
+                                //pen = new Pen(radialBrush, dPath.Thickness.Value);
+
+                                ctx.DrawGeometry(null, pen, pathGeometry);
+
+                                deltaFigure.ApplyDelta();
 
                                 pathGeometry.Freeze();
 
@@ -229,6 +280,7 @@ namespace DeltaDrawing.UI
 
         private PathGeometry buildPath()
         {
+            // Legacy paths are hard coded to 4 points
             const int FIGURE_AMOUNT = 4;
 
             PathGeometry pathGeometry = new PathGeometry();
@@ -254,15 +306,32 @@ namespace DeltaDrawing.UI
             l.Point3 = new Point(dp.Point3.X, dp.Point3.Y);
         }
 
-        private void setGeometryPoints(Geometry pathGeometry, DeltaPath dp)
+        private PathGeometry buildFigure(DeltaFigure df)
         {
-            pathGeometry.GetFlattenedPathGeometry().Figures[0].StartPoint = new Point(dp.Point0.X, dp.Point0.Y);
-            PathFigureCollection k = (PathFigureCollection)pathGeometry.GetFlattenedPathGeometry().Figures;
-            BezierSegment l = (BezierSegment)k[0].Segments[0];
+            const int POINT1_INDEX = 0;
+            const int POINT2_INDEX = 1;
+            const int POINT3_INDEX = 2;
 
-            l.Point1 = new Point(dp.Point1.X, dp.Point1.Y);
-            l.Point2 = new Point(dp.Point2.X, dp.Point2.Y);
-            l.Point3 = new Point(dp.Point3.X, dp.Point3.Y);
+            PathGeometry pathGeometry = new PathGeometry();
+            pathGeometry.Figures = new PathFigureCollection();
+            pathGeometry.Figures.Add(new PathFigure());
+            pathGeometry.Figures[0].Segments = new PathSegmentCollection();
+            pathGeometry.Figures[0].StartPoint = new Point(df.StartPoint.X, df.StartPoint.Y);
+            // For each delta segment in the delta figure, and a segment to the path geometry figure
+            // This allows us to create a line with n points
+            foreach (DeltaSegment deltaSegment in df.DeltaSegments)
+            {
+                BezierSegment s = new BezierSegment();
+                pathGeometry.Figures[0].Segments.Add(s);
+                s.IsSmoothJoin = true;
+                if (deltaSegment.DeltaPoints.Count > POINT3_INDEX)
+                {
+                    s.Point1 = new Point(deltaSegment.DeltaPoints[POINT1_INDEX].X, deltaSegment.DeltaPoints[POINT1_INDEX].Y);
+                    s.Point2 = new Point(deltaSegment.DeltaPoints[POINT2_INDEX].X, deltaSegment.DeltaPoints[POINT2_INDEX].Y);
+                    s.Point3 = new Point(deltaSegment.DeltaPoints[POINT3_INDEX].X, deltaSegment.DeltaPoints[POINT3_INDEX].Y);
+                }
+            }
+            return pathGeometry;
         }
 
         private String formatException(Exception ex)
